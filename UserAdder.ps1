@@ -75,7 +75,7 @@ foreach ($userLine in $users) {
     $params = @{
         'Name'              = "$prenom $nom"
         'SamAccountName'    = $username
-        'UserPrincipalName' = "$username@redlab.local"
+        'UserPrincipalName' = "$username@domain.local" #change the domain.local by you're DN
         'GivenName'         = $prenom
         'Surname'           = $nom
         'Enabled'           = $true
