@@ -64,7 +64,7 @@ foreach ($userLine in $users) {
     $initialPassword = ($prenom.Substring(0,1) + $nom.Substring(0,1) + $dob + "*").ToLower()
     $securePassword = ConvertTo-SecureString $initialPassword -AsPlainText -Force
     
-    # Find OU
+    # Find Orginastion Unite
     $childOU = Get-ChildOU -childOUName $childOUName
     if (-not $childOU) {
         Write-Host "Impossible de créer l'utilisateur $prenom $nom. UO enfant '$childOUName' introuvable."
