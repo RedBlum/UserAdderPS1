@@ -1,4 +1,3 @@
-﻿# Définition de la fonction pour trouver l'UO enfant en fonction du type d'utilisateur
 function Get-ChildOU {
     param([string]$childOUName)
     
@@ -13,7 +12,7 @@ function Get-ChildOU {
     }
 }
 
-# Sélection du fichier .txt à traiter
+# Select .txt
 $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
 $openFileDialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
 $openFileDialog.Filter = "Fichiers texte (*.txt)|*.txt"
@@ -26,27 +25,24 @@ if ($openFileDialog.ShowDialog() -eq 'OK') {
     exit
 }
 
-# Définir le chemin du fichier de sortie sur le bureau
+# output file with username and temporary password
 $outFile = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), 'login.txt')
 
-# Création d'un tableau pour stocker les informations des utilisateurs créés
 $createdUsers = @()
 
-# Lecture du fichier .txt et création des utilisateurs
 $users = Get-Content $file
 
 foreach ($userLine in $users) {
-    # Ignorer les lignes commentées
+
+    # line who start with # is ignored
     if ($userLine -match '^\s*#') {
         continue
     }
     
-    # Ignorer les lignes vides
     if ([string]::IsNullOrWhiteSpace($userLine)) {
         continue
     }
-
-    # Supprimer le ';' à la fin de la ligne
+    
     $userLine = $userLine.TrimEnd(';')
 
     $userInfo = $userLine -split ","
@@ -61,21 +57,21 @@ foreach ($userLine in $users) {
     $dob = $userInfo[2].Trim()
     $childOUName = $userInfo[3].Trim()
     
-    # Générer le nom d'utilisateur
+    # Genrate username
     $username = ($prenom.Substring(0,1) + "." + $nom).ToLower()
     
-    # Générer le mot de passe
+    # Generate temporary password
     $initialPassword = ($prenom.Substring(0,1) + $nom.Substring(0,1) + $dob + "*").ToLower()
     $securePassword = ConvertTo-SecureString $initialPassword -AsPlainText -Force
     
-    # Trouver l'UO enfant appropriée
+    # Find OU
     $childOU = Get-ChildOU -childOUName $childOUName
     if (-not $childOU) {
         Write-Host "Impossible de créer l'utilisateur $prenom $nom. UO enfant '$childOUName' introuvable."
         continue
     }
     
-    # Créer l'utilisateur
+    # Create user
     $params = @{
         'Name'              = "$prenom $nom"
         'SamAccountName'    = $username
@@ -93,7 +89,6 @@ foreach ($userLine in $users) {
     try {
         $userObj = New-ADUser @params -ErrorAction Stop
         
-        # Ajouter les informations à la liste des utilisateurs créés
         $userInfo = "$prenom $nom, $initialPassword"
         $createdUsers += $userInfo
         
@@ -103,7 +98,7 @@ foreach ($userLine in $users) {
     }
 }
 
-# Écrire les informations des utilisateurs dans le fichier de sortie
+# Write output file
 try {
     $createdUsers | Out-File -FilePath $outFile -Encoding UTF8
     Write-Host "Les informations des utilisateurs ont été écrites dans $outFile."
