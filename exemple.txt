@@ -1,0 +1,6 @@
+# This is an exemple of an input file for the srcipt
+# lastname, firstname, date of birth, final OU;
+
+Smith, Jhone, 23091994, Teacher;
+Drown, Emmett, 06121914, Teacher;
+McFly, Marty, 19081995, Teacher;
