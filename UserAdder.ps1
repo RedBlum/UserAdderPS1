@@ -1,7 +1,7 @@
 function Get-ChildOU {
     param([string]$childOUName)
     
-    $rootOU = "OU=Domain Controllers,DC=domain,DC=local"  # Remplacer par le DN de votre OU racine
+    $rootOU = "OU=Domain Controllers,DC=domain,DC=local"  # Remplace by the DN of you're root OU
     $ou = Get-ADOrganizationalUnit -Filter "Name -eq '$childOUName'" -SearchBase $rootOU
     
     if ($ou) {
