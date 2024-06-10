@@ -89,7 +89,7 @@ foreach ($userLine in $users) {
     try {
         $userObj = New-ADUser @params -ErrorAction Stop
         
-        $userInfo = "$prenom $nom, $initialPassword"
+        $userInfo = "$prenom $nom, $username, $initialPassword"
         $createdUsers += $userInfo
         
         Write-Host "L'utilisateur $prenom $nom a été créé avec succès dans $($childOU.Name). Mot de passe initial : $initialPassword"
