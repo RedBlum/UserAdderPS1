@@ -180,7 +180,7 @@ function Write-UserInformationToFile {
 
 # Main script execution
 try {
-    $rootOU = "OU=Domain Controllers,DC=redlab,DC=local"  # Replace with your root OU's DN
+    $rootOU = "OU=Domain Controllers,DC=domain,DC=local"  # Replace with your root OU's DN
     
     # Select .txt file
     $file = Select-TextFile
